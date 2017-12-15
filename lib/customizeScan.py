@@ -17,7 +17,7 @@ class Customize_Scan():
         self.ua = target['ua']
         self.logger = logger
         self.redis_r = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=REDIS_DB)
-        self.rules = self.redis_r.hget('passive_config', 'conf_rule')
+        self.rules = self.redis_r.hget('passive_config', 'conf_scan_rule')
 
     def scan(self):
         headers = {'User-Agent': self.ua, 'Cookie': self.cookie}

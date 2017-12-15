@@ -13,12 +13,18 @@ NAME, VERSION, AUTHOR, LICENSE = "PublicSecScan", "V0.1", "咚咚呛", "Public (
 
 def config():
     redis_r = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=REDIS_DB)
+    # 防止任务开始时修改已有的配置信息
+    if redis_r.keys('passive_config'):
+        if len(redis_r.hkeys('passive_config'))>2:
+            return
     # 配置参数中的替换字符，防止由于越权导致的误操作
     redis_r.hset('passive_config', 'parameter_json', conf_parameter_json)
     # 维持一个sesson访问列表
     redis_r.hset('passive_config', 'cookies', conf_cookies)
     # 白名单路径，路径中出现如/admin不进行检测
     redis_r.hset('passive_config', 'white_path', conf_white_path)
+    # 自定义扫描规则
+    redis_r.hset('passive_config', 'conf_scan_rule', conf_scan_rule)
     # sqlmap远程ip链接
     redis_r.hset('passive_config', 'sqlmap_server', sqlmap_server)
     # 当前任务max_time最大运行时间
@@ -73,7 +79,7 @@ def passive_scan_dispath(targets):
     SSRF_Scan(targets, logger).run()
     # XSS扫描
     XSS_Scan(targets, logger).run()
-    #自定义漏洞规则扫描
+    # 自定义漏洞规则扫描
     Customize_Scan(targets, logger).run()
 
     logger.infostring('finsh task.')
