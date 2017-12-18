@@ -7,15 +7,16 @@ from lib.SsrfScan import *
 from lib.XssScan import *
 from lib.white import *
 from lib.customizeScan import *
+from lib.tryReqest import *
 
 NAME, VERSION, AUTHOR, LICENSE = "PublicSecScan", "V0.1", "咚咚呛", "Public (FREE)"
 
 
 def config():
     redis_r = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=REDIS_DB)
-    # 防止任务开始时修改已有的配置信息
+    # 防止任务开始时修改已有的配置信息,当已存在配置信息时，不进行配置设置.
     if redis_r.keys('passive_config'):
-        if len(redis_r.hkeys('passive_config'))>2:
+        if len(redis_r.hkeys('passive_config')) > 2:
             return
     # 配置参数中的替换字符，防止由于越权导致的误操作
     redis_r.hset('passive_config', 'parameter_json', conf_parameter_json)
@@ -41,6 +42,7 @@ def config():
 
 
 logger = LogInfo()
+# 初始化相关配置,
 config()
 
 app = Celery()
@@ -73,6 +75,9 @@ def passive_scan_dispath(targets):
         return
     # 导入配置信息
     Check_Heads(targets)
+    # 判断是否允许访问
+    if not Try_Request(targets):
+        return
     # SQL注入扫描
     SQL_Scan(targets, logger).run()
     # SSRF扫描
