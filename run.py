@@ -15,3 +15,13 @@ if __name__ == '__main__':
         print "[+] push info to redis , url_short: %s" % values['ng_request_url_short']
         passive_scan_dispath.delay(values)
     print "success push task."
+    '''
+    target = {}
+    target['protocol'] = "http://"
+    target['ng_request_url_short'] = "/user/my.php"
+    target['domain'] = "www.babytree.com"
+    target['method'] = "GET"
+    target['arg'] = "tab=message&view=user"
+    print "[+] push info to redis , url_short: %s" % target['ng_request_url_short']
+    passive_scan_dispath.delay(target)
+    '''
