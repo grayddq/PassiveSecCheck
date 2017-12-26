@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from tasks import *
 import redis
+from lib.config import *
 
 NAME, VERSION, AUTHOR, LICENSE = "PublicSecScan", "V0.1", "咚咚呛", "Public (FREE)"
 
