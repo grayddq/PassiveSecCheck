@@ -12,5 +12,6 @@ if __name__ == '__main__':
     key_list = redis_r_data.keys('DataSort_*')
     for key in key_list:
         values = eval(redis_r_data.get(key))
-        print "push info to redis , url_short: %s" % values['ng_request_url_short']
+        print "[+] push info to redis , url_short: %s" % values['ng_request_url_short']
         passive_scan_dispath.delay(values)
+    print "success push task."
