@@ -1,9 +1,20 @@
 # -*- coding: utf-8 -*-
-# redis信息
-REDIS_HOST = '182.11.11.11'
+# redis，用于任务发布，此处为数据源存储的redis
+DATA_REDIS_HOST = '127.0.0.1'
+DATA_REDIS_PORT = 6379
+DATA_REDIS_PASSWORD = '122112121212'
+DATA_REDIS_DB = 5
+
+# redis，用于漏洞验证消息队列
+REDIS_HOST = '182.61.11.11'
 REDIS_PORT = 6379
-REDIS_PASSWORD = 'xxxxxxx'
+REDIS_PASSWORD = '11112222'
 REDIS_DB = 5
+
+# -----------------------------------------------------------------------------------------------
+# --------------------------------任务发布 可不需要配置下列信息----------------------------------
+# -----------------------------------------------------------------------------------------------
+
 # 配置参数中的替换字符，防止参数中出现session权限判断等
 conf_parameter_json = {
     'session': '12234234234'
@@ -20,7 +31,7 @@ conf_white_path = ['/admin', '/administra']
 # 不设定parameter时，代表挨个替换
 # 可以测试一些越权操作和一些常见漏洞
 # 比如设定参数名为phone，替换其参数值为手机号，并匹配response的body内，是否出现此人的个人信息。
-conf_rule = [
+conf_scan_rule = [
     {'value': '17600296111', 'rule': '111111111', 'name': 'Exceed Permissions', 'parameter': 'phone'},
     {'value': '17600296112', 'rule': '22222222', 'name': 'Exceed Permissions', 'parameter': 'iphone'}
 ]
@@ -36,6 +47,6 @@ sqlmap_risk = 1
 # ssrf_server远程ip或domain
 # ssrf实质是服务端访问了客户端传递的地址
 # 预先搭建一台web，收集分析日志可以判断ssrf触发点。
-ssrf_server = '192.168.1.3'
+ssrf_server = '10.1.1.3'
 # ssrf web日志路径
-ssrf_logpath = '/var/logs/nginx/access.log'
+ssrf_logpath = '/usr/local/openresty/nginx/logs/access.log'
